@@ -13,6 +13,7 @@ class TestConfluenceCommon(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.config = _.prepareConfiguration()
+        self.config['extensions'].append('sphinx.ext.todo')
         test_dir = os.path.dirname(os.path.realpath(__file__))
         dataset = os.path.join(test_dir, 'dataset-common')
         self.expected = os.path.join(test_dir, 'expected')
@@ -41,6 +42,9 @@ class TestConfluenceCommon(unittest.TestCase):
 
     def test_references(self):
         self._assertExpectedWithOutput('references')
+
+    def test_todo(self):
+        self._assertExpectedWithOutput('todo')
 
     def test_registry(self):
         # validate builder's registration into Sphinx

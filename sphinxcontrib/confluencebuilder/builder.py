@@ -99,6 +99,10 @@ class ConfluenceBuilder(Builder):
         def link_transform(docname):
             return docname + self.link_suffix
 
+        assert(
+            not self.config.confluence_fmt_todo
+            or (len(self.config.confluence_fmt_todo) == 2))
+
         if self.config.confluence_file_transform is not None:
             self.file_transform = self.config.confluence_file_transform
         else:

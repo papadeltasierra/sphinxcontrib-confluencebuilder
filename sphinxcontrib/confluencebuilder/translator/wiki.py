@@ -55,7 +55,7 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
         if SEP in self.docname:
             self.docparent = self.docname[0:self.docname.rfind(SEP)+1]
 
-        restricted_macros = builder.config.confluence_adv_restricted_macros
+        restricted_macros = self.builder.config.confluence_adv_restricted_macros
         if not 'anchor' in restricted_macros:
             self.can_anchor = True
         else:
@@ -562,6 +562,10 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
             self.new_state(0)
 
         self._li_terms.append(node.astext())
+        self.add_text('{anchor:term-%s}\n' % node.astext())
+        if self.builder.config.confluence_fmt_glossary_term:
+            self.add_text(
+                '%s. ' % self.builder.config.confluence_fmt_glossary_term)
 
     def depart_term(self, node):
         pass
@@ -580,7 +584,10 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
 
         self.new_state(0)
         definition = ' '.join(node.astext().split(self.nl))
-        self.add_text('bq. %s' % definition)
+        if self.builder.config.confluence_fmt_glossary_defn:
+            self.add_text(
+                '%s. ' % self.builder.config.confluence_fmt_glossary_defn)
+        self.add_text(definition)
         self.end_state()
 
         raise nodes.SkipNode
@@ -843,10 +850,6 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
             docname = posixpath.normpath(
                 self.docparent + path.splitext(node['refuri'])[0])
             doctitle = ConfluenceState.title(docname)
-            if not doctitle:
-                ConfluenceLogger.warn("unable to build link to document due to "
-                    "missing title (in %s): %s" % (self.docname, docname))
-                raise nodes.SkipNode
 
             if '#' in node['refuri']:
                 anchor = node['refuri'].split('#')[1]
@@ -866,10 +869,18 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
             label = node.astext()
             for find, encoded in SPECIAL_VALUE_REPLACEMENTS:
                 label = label.replace(find, encoded)
-            if label == doctitle and not anchor:
+            if not doctitle:
+                # A link to an anchor on the current page.
+                assert anchor
+                self.add_text('[%s|%s]' % (label, anchor))
+            elif label == doctitle and not anchor:
+                # A link to a page.
                 self.add_text('[%s]' % label)
             else:
+                # Some text to display and the link is to an anchor in a
+                # different document.
                 self.add_text('[%s|%s%s]' % (label, doctitle, anchor))
+
             raise nodes.SkipNode
 
         # Anchor.
@@ -1003,3 +1014,15 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
         if 'confluence' in node.get('format', '').split():
             self.add_text(node.astext())
         raise nodes.SkipNode
+
+    def visit_todo_node(self, node):
+        if self.builder.config.confluence_fmt_todo:
+            self.add_text(self.builder.config.confluence_fmt_todo[0])
+        else:
+            self.visit_admonition(node)
+
+    def depart_todo_node(self, node):
+        if self.builder.config.confluence_fmt_todo:
+            self.add_text(self.builder.config.confluence_fmt_todo[1])
+        else:
+            self.depart_admonition(node)
