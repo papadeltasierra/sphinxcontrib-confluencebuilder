@@ -465,19 +465,21 @@ seconds, the following can be used:
 
     confluence_timeout = 10
 
-confluence_fmt_glossary_term, confluence_fmt_glossary_desc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+confluence_fmt_todo
+~~~~~~~~~~~~~~~~~~~
 
-Formatting for the term and the description of the term within a Glossary_.
-Basic `Confluence Wiki Markup`_ text formatting is supported and the markup
-should be defined without the followin period and space:
+Formatting for a ToDo_ item.  Basic `Confluence Wiki Markup`_ text formatting is
+supported and the markup is defined as a two-entry array, the first entry being
+prefixed before the ToDo_ and the second being suffixed after the ToDo_.
 
 .. code-block:: python
 
-    confluence_fmt_glossary_term = 'h6' (default '')
-    confluenct_fmt_glossary_desc = '' (default 'bg')
+    confluence_fmt_todo = ['{note:label=|icon=false}', '{node}' ] (default [])
 
-The empty string, `''` can be given to indicate that no formatting should be
+The example places the ToDo_ entry into a Confluence note macro with no label
+and the default note icon not displayed.
+
+The empty array `[]` can be set to indicate that no formatting should be
 applied.
 
 
@@ -487,5 +489,5 @@ applied.
 .. _toctree: http://www.sphinx-doc.org/en/stable/markup/toctree.html#directive-toctree
 .. _Requests CA docs: http://docs.python-requests.org/en/master/user/advanced/#ssl-cert-verification
 .. _SSL CA docs: https://docs.python.org/3/library/ssl.html#ssl.create_default_context
-.. _Glossary: http://www.sphinx-doc.org/en/master/glossary.html
+.. _ToDo: http://www.sphinx-doc.org/en/master/ext/todo.html?highlight=todo
 .. _Confluence Wiki Markup: https://confluence.atlassian.com/doc/confluence-wiki-markup-251003035.html
