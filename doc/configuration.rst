@@ -465,6 +465,61 @@ seconds, the following can be used:
 
     confluence_timeout = 10
 
+advanced configuration - formatting
+-----------------------------------
+
+Custom formatting may be applied to certain aspects of the Confluence output
+by specifying a prefix and/or suffix of `Confluence Wiki Markup`_. The
+Confluence formatting required is a combination of formatting and the
+content to be formatted so formatting is defined using an array, defining each
+portion of the formatting. In most case this is just a prefix and a suffix but
+future cases may require more than 2 formatting values.
+
+So for example the Confluence formatting for a ReStructured Text `something`
+might be to make it into a level-2 header by prefixing the header text with
+the `Confluence Wiki Markup`_ `h2.` header, plus a space, with no suffix being
+required and this would be defined as follows:
+
+.. code-block:: python 
+
+    confluence_fmt_something = ['h2. ', '']
+
+Alternatively the `something` might be wrapped into a `warning` box which
+requires `Confluence Wiki Markup`_ to both begin, and end, the definition of
+the surrounding `warning box:
+
+.. code-block:: python 
+
+    confluence_fmt_something = ['{warning:label=A Something Box}', '{warning}']
+
+Custom formatting can be tested in Confluence by creating a blank page and
+using the `wiki` macro to test `Confluence Wiki Markup`_ constructs.
+
+An empty array, `[]` indicates no formatting at all and the prefix or suffix 
+may be an empty string, `''` to indicate no formatting of the specific prefix
+or suffix.
+
+confluence_fmt_glossary_term
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Formatting for the Glossary_ term. Basic `Confluence Wiki Markup`_ text
+formatting is supported and a prefix and a suffix may be defined to bracket
+the term:
+
+.. code-block:: python
+
+    confluence_fmt_glossary_term = ['h6. ', '']    (default ['', ''])
+
+confluence_fmt_glossary_defn
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Formatting for a Glossary_ definition. Basic `Confluence Wiki Markup`_ text
+formatting is supported and a prefix and a suffix may be defined to bracket
+the definition:
+
+.. code-block:: python
+
+    confluence_fmt_glossary_defn = ['bg. ', '']    (default ['bg. ', ''])
 
 .. _Requests: https://pypi.python.org/pypi/requests
 .. _api_tokens: https://confluence.atlassian.com/cloud/api-tokens-938839638.html
@@ -472,3 +527,5 @@ seconds, the following can be used:
 .. _toctree: http://www.sphinx-doc.org/en/stable/markup/toctree.html#directive-toctree
 .. _Requests CA docs: http://docs.python-requests.org/en/master/user/advanced/#ssl-cert-verification
 .. _SSL CA docs: https://docs.python.org/3/library/ssl.html#ssl.create_default_context
+.. _Glossary: http://www.sphinx-doc.org/en/master/glossary.html
+.. _Confluence Wiki Markup: https://confluence.atlassian.com/doc/confluence-wiki-markup-251003035.html
