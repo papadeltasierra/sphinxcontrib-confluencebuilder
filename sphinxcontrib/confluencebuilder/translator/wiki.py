@@ -566,9 +566,15 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
             if self.can_anchor:
                 for anchor in node['ids']:
                     self.add_text('{anchor:%s}\n' % anchor)
+                    
+        if (self.builder.config.confluence_fmt_glossary_term and
+               self.builder.config.confluence_fmt_glossary_term[0]):
+            self.add_text(self.builder.config.confluence_fmt_glossary_term[0])
 
     def depart_term(self, node):
-        pass
+        if (self.builder.config.confluence_fmt_glossary_term and
+               self.builder.config.confluence_fmt_glossary_term[1]):
+            self.add_text(self.builder.config.confluence_fmt_glossary_term[1])
 
     def visit_termsep(self, node):
         raise nodes.SkipNode
@@ -584,13 +590,18 @@ class ConfluenceWikiTranslator(ConfluenceTranslator):
 
         self.new_state(0)
         definition = ' '.join(node.astext().split(self.nl))
-        self.add_text('bq. %s' % definition)
+        if (self.builder.config.confluence_fmt_glossary_defn and
+               self.builder.config.confluence_fmt_glossary_defn[0]):
+            self.add_text(self.builder.config.confluence_fmt_glossary_defn[0])
+        self.add_text(definition)
         self.end_state()
 
         raise nodes.SkipNode
 
     def depart_definition(self, node):
-        pass
+        if (self.builder.config.confluence_fmt_glossary_defn and
+               self.builder.config.confluence_fmt_glossary_defn[1]):
+            self.add_text(self.builder.config.confluence_fmt_glossary_defn[1])
 
     def visit_field_list(self, node):
         pass
